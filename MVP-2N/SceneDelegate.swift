@@ -8,6 +8,7 @@
 
 import UIKit
 
+@available(iOS 13.0, *)
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -17,7 +18,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
-        guard let _ = (scene as? UIWindowScene) else { return }
+        //создали сцену
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        
+        //создали наш window
+        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+        //передали ему сцену
+        window?.windowScene = windowScene
+        
+        let navigationController = UINavigationController()
+        let assemblyBuilder = AsselderModuleBuilder()
+        let router = Router(navigationController: navigationController, assembyBuilder: assemblyBuilder)
+        
+        router.initialViewController()
+        //создали наш модуль, он вернул нам VC
+        //let mainVC = AsselderModuleBuilder.createMainModule()
+        //создаем navController, сюда передаем ему рутовый контроллер который мы собрали
+        //let navBar = UINavigationController(rootViewController: mainVC)
+        //сказали что у window будет rotVC это наш navBar у которого тоже свой root есть
+        window?.rootViewController = navigationController
+        //виндов покажи
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
